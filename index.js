@@ -12,14 +12,14 @@ dotenv.config();
 app.use(express.json());
 
 // Routing
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
     messaga: "Welcome To The BasketHunt Chat app Server",
   });
 });
+app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/user", userRoutes);
-app.use("api/v1/admin", adminRoutes);
 
 const PORT = 4000;
 

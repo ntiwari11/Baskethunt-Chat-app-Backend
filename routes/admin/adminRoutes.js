@@ -1,10 +1,18 @@
 import express from "express";
 const router = express.Router();
-// import Welcome fuintion
-import { adminWelcome } from "../../controllers/admin/adminController";
+import {
+  adminLogin,
+  adminRegister,
+  adminWelcome,
+  getMySelfAdmin,
+  updateAdminProfile,
+} from "../../controllers/admin/adminController";
+import { protect } from "../../middleware/authMiddleware";
 
 router.get("/", adminWelcome);
 
-router.get("/welcome", adminWelcome);
-
+router.post("/register", adminRegister);
+router.post("/login", adminLogin);
+router.get("/getmyself", protect, getMySelfAdmin);
+router.put("/updateprofile", updateAdminProfile);
 export default router;
