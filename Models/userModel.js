@@ -1,5 +1,3 @@
-// const mongoose = require("mongoose");
-// const bcrypt = require("bcryptjs");
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
@@ -10,7 +8,7 @@ const userSchema = mongoose.Schema(
     password: { type: String, required: true, selected: false },
     role: {
       type: String,
-      default: "Admin",
+      default: "admin",
     },
   },
   { timestamps: true }

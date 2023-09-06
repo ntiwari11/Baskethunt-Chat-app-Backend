@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 // Databse connection import
 import connectDb from "./database/connection";
@@ -10,6 +11,7 @@ import adminRoutes from "./routes/admin/adminRoutes";
 const app = express();
 dotenv.config();
 app.use(express.json());
+app.use(cookieParser());
 
 // Routing
 app.get("/", (req, res) => {

@@ -1,32 +1,32 @@
-const jwt = require("jsonwebtoken");
-const User = require("../Models/userModel");
+// const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import User from "../Models/userModel";
 
-const protect = async (req, res, next) => {
-  let token;
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
-
-      //decodes token id
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      req.user = await User.findById(decoded.id).select("-password");
-
-      next();
-    } catch (error) {
-      res.status(401);
-      throw new Error("Not authorized, token failed");
-    }
-  }
-
+exports.isAuthenticatedUsers = async (req, res, next) => {
+  // Cookies authentication
+  const { token } = req.cookies;
   if (!token) {
-    res.status(401);
-    throw new Error("Not authorized, no token");
+    return res.status(401).json({
+      success: false,
+      message: "Un-Authorize, Token expired. Please Login or Register",
+    });
+    // throw new Error("Not authorized, no token. Please Login or Register");
   }
+  const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+  req.user = await User.findById(decodedData.id);
+
+  next();
 };
 
-module.exports = { protect };
+// authorize roles by admin
+exports.authorizeRolesAdmin = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: `Role : ${req.user.role} is not allowed to access this resource`,
+      });
+    }
+    next();
+  };
+};
